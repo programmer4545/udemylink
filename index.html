@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Udemy Course Links</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="container mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Add Udemy Course Link</h1>
+        <form id="courseForm" class="mb-4">
+            <input type="text" id="courseLink" class="border p-2 w-full mb-2" placeholder="Enter Udemy Course Link">
+            <button type="submit" class="bg-blue-500 text-white p-2 rounded">Add Link</button>
+            <button type="button" id="confirmLink" class="bg-green-500 text-white p-2 rounded ml-2 hidden">Confirm Link</button>
+        </form>
+        <h2 class="text-xl font-bold mb-2">Course Links</h2>
+        <ul id="courseList" class="list-disc pl-5"></ul>
+    </div>
+
+    <script>
+        document.getElementById('courseForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const courseLink = document.getElementById('courseLink').value;
+            const udemyRegex = /^https?:\/\/(www\.)?udemy\.com\/course\/[a-zA-Z0-9_-]+\/?$/;
+
+            if (!udemyRegex.test(courseLink)) {
+                alert('Please enter a valid Udemy course link.');
+                return;
+            }
+
+            document.getElementById('confirmLink').classList.remove('hidden');
+        });
+
+        document.getElementById('confirmLink').addEventListener('click', function() {
+            const courseLink = document.getElementById('courseLink').value;
+
+            let links = JSON.parse(localStorage.getItem('udemyLinks')) || [];
+
+            if (links.length >= 3) {
+                alert('You can only add up to 3 links.');
+                return;
+            }
+
+            links.push(courseLink);
+            localStorage.setItem('udemyLinks', JSON.stringify(links));
+
+            loadLinks();
+            document.getElementById('confirmLink').classList.add('hidden');
+            document.getElementById('courseLink').value = '';
+        });
+
+        function loadLinks() {
+            let links = JSON.parse(localStorage.getItem('udemyLinks')) || [];
+            document.getElementById('courseList').innerHTML = links
+                .map(link => `<li>${link}</li>`)
+                .join('');
+
+            if (links.length >= 3) {
+                document.getElementById('courseForm').classList.add('hidden');
+            } else {
+                document.getElementById('courseForm').classList.remove('hidden');
+            }
+        }
+
+        // Load links on page load
+        document.addEventListener('DOMContentLoaded', loadLinks);
+    </script>
+</body>
+</html>
