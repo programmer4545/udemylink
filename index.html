@@ -24,7 +24,7 @@
             const courseLink = document.getElementById('courseLink').value;
             const udemyRegex = /^https?:\/\/(www\.)?udemy\.com\/course\/[a-zA-Z0-9_-]+\/?(\?couponCode=[a-zA-Z0-9_-]+)?$/;
 
-            if (!udemyRegex.test(courseLink)) {
+            if (udemyRegex.test(courseLink)) {
                 alert('Please enter a valid Udemy course link.');
                 return;
             }
